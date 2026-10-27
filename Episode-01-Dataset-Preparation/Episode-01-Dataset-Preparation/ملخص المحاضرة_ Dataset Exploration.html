@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ملخص المحاضرة: Dataset Exploration</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mut:#5b6478;--bd:#e3e7f0;--c1:#6366f1;--c2:#0ea5e9;--c3:#10b981;--c4:#f59e0b;--c5:#ef4444;--c6:#a855f7;--tip:#fff7e0;--key:#e8f7ef;--warn:#fdeceb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1220;--card:#171c2e;--tx:#e8ecf6;--mut:#9aa4bd;--bd:#2a3150;--tip:#3a3217;--key:#12352a;--warn:#3d1b1b}}
+:root[data-theme="dark"]{--bg:#0e1220;--card:#171c2e;--tx:#e8ecf6;--mut:#9aa4bd;--bd:#2a3150;--tip:#3a3217;--key:#12352a;--warn:#3d1b1b}
+html{scroll-padding-top:70px}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,Arial,sans-serif;line-height:1.95}
+header{padding:28px 18px;text-align:center;background:linear-gradient(135deg,var(--c2),var(--c1));color:#fff}
+header h1{margin:0 0 6px;font-size:1.6rem}header p{margin:0;opacity:.9}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:6px;overflow-x:auto;padding:8px 10px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:20px;padding:2px 12px;font-size:.85rem}
+main{max-width:900px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-right:6px solid var(--a);border-radius:14px;padding:16px 18px;margin:16px 0}
+.c1{--a:var(--c1)}.c2{--a:var(--c2)}.c3{--a:var(--c3)}.c4{--a:var(--c4)}.c5{--a:var(--c5)}.c6{--a:var(--c6)}
+h2{margin:0 0 8px;font-size:1.2rem;color:var(--a)}h3{margin:14px 0 4px;font-size:1rem;color:var(--a)}
+.n{display:inline-block;background:var(--a);color:#fff;border-radius:50%;width:30px;height:30px;line-height:30px;text-align:center;margin-left:8px;font-size:.95rem}
+p{margin:6px 0}ul{margin:6px 0;padding-right:22px}li{margin:3px 0}
+b{color:var(--a)}
+code{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:0 5px;font-size:.88em;direction:ltr;unicode-bidi:isolate}
+.box{border-radius:10px;padding:8px 14px;margin:10px 0;border-right:4px solid}
+.tip{background:var(--tip);border-color:var(--c4)}.key{background:var(--key);border-color:var(--c3)}.warn{background:var(--warn);border-color:var(--c5)}
+table{width:100%;border-collapse:collapse;display:block;overflow-x:auto;margin:10px 0}
+th,td{border:1px solid var(--bd);padding:6px 10px;text-align:center}
+th{background:var(--a);color:#fff}td:first-child{font-weight:600}
+.t{display:inline-block;font-size:.72rem;color:var(--mut);border:1px solid var(--bd);border-radius:10px;padding:0 8px;margin-right:6px;direction:ltr}
+.ar{color:var(--a);font-weight:700}
+</style></head><body>
+<header><h1>⚡ ملخص سريع: Dataset Exploration</h1><p>Build an LLM from Scratch · الحلقة 1 · نسخة مختصرة للمراجعة</p></header>
+<main>
+<section class="card c1"><h2><span class="n">1</span>الداتا الكويسة محتاجة إيه؟</h2>
+<ul><li>🗣️ <b>لغة سليمة</b> وتراكيب لغوية متنوعة.</li><li>🧠 <b>معرفة</b>: الموديل محصور بالمعرفة اللي اتدرّب عليها.</li><li>جابرتي: <b>Bilingual</b> (عربي + إنجليزي) والمعرفة عن <b>التاريخ المصري</b>.</li></ul></section>
+
+<section class="card c3"><h2><span class="n">2</span>Pretrain vs Fine-tune</h2>
+<table><tr><th></th><th>Pretrain</th><th>Fine-tune</th></tr>
+<tr><td>المهمة</td><td>Predict next word</td><td>Predict next word، بس الـ input سؤال</td></tr>
+<tr><td>الداتا</td><td>Text chunks من ويكيبيديا</td><td>Question + Answer (مولّدة بالـ AI)</td></tr>
+<tr><td>الحجم</td><td>Phase 1: 175,000 · Phase 2: 94,000</td><td>≈ 58,000 row</td></tr></table></section>
+
+<section class="card c4"><h2><span class="n">3</span>ليه Phases؟</h2>
+<div class="box tip">كل ما تفلتر أكتر → Quality أعلى لكن عدد أقل. فبنبدأ بداتا <b>كتير وجودة أقل</b> (Phase 1) وبعدين نكمّل على داتا <b>أقل وأجود</b> (Phase 2، فلترة بـ LLM).</div>
+<p>الأفضل تفصل الـ splits وتحتفظ بكل معلومة عن الداتا، وبعدين تقرر تمشي بالتدريج أو تدمج.</p></section>
+
+<section class="card c6"><h2><span class="n">4</span>خطوات الاستكشاف</h2>
+<table><tr><th>الفحص</th><th>النتيجة</th></tr>
+<tr><td>Nulls</td><td>مفيش ✅</td></tr><tr><td>Duplicates</td><td>0 ✅</td></tr>
+<tr><td>اللغات (Phase 1)</td><td>English ≈ 71% · Arabic ≈ 28%</td></tr>
+<tr><td>اللغات (Phase 2)</td><td>العربي أقرب للإنجليزي</td></tr>
+<tr><td>Eval vs Train</td><td>نفس النسب (Stratified)</td></tr>
+<tr><td>الأطوال</td><td>mean ≈ 1553 حرف · max = 200,000</td></tr></table>
+<div class="box warn">الداتا مش مثالية، ومفيش Bilingual بنسبة 50/50 في الواقع. مهارتك إنك تستكشف وتاخد قرار.</div></section>
+
+<section class="card c2"><h2><span class="n">5</span>التوكنز والـ Context</h2>
+<ul><li>الموديل بيحسب <b>توكنز</b> مش حروف. التوكن ≈ <b>3.5 حرف</b>.</li><li>الـ Input + Output مينفعش يعدّوا الـ Context Window.</li><li>العينة الأطول من الـ Context: <b>Drop كامل</b> أحسن من Truncate (بيقطع المعنى).</li></ul>
+<table><tr><th>Context</th><th>Keep</th><th>Drop</th></tr>
+<tr><td>512</td><td>≈ 61%</td><td>≈ 38%</td></tr>
+<tr><td>1024 ✅</td><td>≈ 99.3%</td><td>≈ 0.7%</td></tr>
+<tr><td>2048</td><td>≈ 99.8%</td><td>≈ 0.2%</td></tr></table>
+<div class="box key">اخترنا <b>1024</b>: 2048 بيزوّد أقل من 1% بس ومحتاج GPU وRAM أكتر.</div></section>
+
+<section class="card c5"><h2><span class="n">6</span>أهم نصيحة</h2>
+<div class="box tip"><b>اقري الداتا Manual:</b> خدي Samples عشوائية، اقريها واكتبي Notes (10 دقايق كل كام يوم). الأرقام ممكن تضلّل من غير ما يطلع Error. استكشاف الداتا مرحلة <b>Bottleneck</b>: يا إما تعدّي سليم يا مش سليم.</div></section>
+</main></body></html>
